@@ -5,6 +5,19 @@
 #define LOCAL_SSID "Van Tiennn"
 #define LOCAL_PASS "nguyenvantienn"
 
+#define BLYNK_TEMPLATE_ID           "TMPL-Fb8IWXf"
+#define BLYNK_DEVICE_NAME           "IOT DACS"
+#define BLYNK_AUTH_TOKEN            "YDFKqnzLuXLkO3pWcmqafGhAQQ7ZfyU8"
+#define BLYNK_PRINT Serial
+#include <WiFiClient.h>
+#include <BlynkSimpleEsp32.h>
+char auth[] = BLYNK_AUTH_TOKEN;
+char ssid[] = "Van Tiennn";
+char pass[] = "nguyenvantienn";
+WidgetLED led1_connect(V0);
+WidgetLED led2_connect(V2);
+unsigned long times=millis();
+
 #define PIN_LED_27 27     //On board LED
 #define PIN_LED_26 26     //On board LED
 
@@ -21,6 +34,7 @@ unsigned long previousTime = 0;
 const long timeoutTime = 2000;
 void setup() {
   Serial.begin(9600);
+  Blynk.begin(auth, ssid, pass);
   Serial.println("hello");
   delay(100);
   pinMode(PIN_LED_27, OUTPUT);
@@ -38,9 +52,47 @@ void setup() {
   Serial.print("IP Wifi address: "); Serial.println(WiFi.localIP());
   server.begin();
 }
+BLYNK_CONNECTED() {
+  // Request the latest state from the server
+  Blynk.syncVirtual(V1,V3);
+}
+BLYNK_WRITE(V1){
+  int p = param.asInt();
+  if (p == 0){
+    LED_26_State = "off";
+  }else{
+    LED_26_State = "on";
+  }
+  digitalWrite(PIN_LED_26, p); 
+}
+BLYNK_WRITE(V3){
+  int p = param.asInt();
+  if (p == 0){
+    LED_27_State = "off";
+  }else{
+    LED_27_State = "on";
+  }
+  digitalWrite(PIN_LED_27, p); 
+}
 
 void loop() {
   WiFiClient client = server.available();   
+  Blynk.run();
+  if(millis()-times>1000){
+    if (led1_connect.getValue()){
+      led1_connect.off();
+    }else {
+      led1_connect.on();
+    }
+    if (led2_connect.getValue()){
+      led2_connect.off();
+    }else {
+      led2_connect.on();
+    }
+    times=millis();
+  }
+  
+
   //Serial.println("New Client.");         
   String currentLine = "";              
   currentTime = millis();
@@ -114,10 +166,21 @@ client.println("        <div id=\"main\">");
 client.println("            <!-- đèn trạng thái đang tắt  -->");
 client.println("            <div class=\"content-led\" id=\"led1\">");
 client.println("                <div class=\"img-led\">");
-client.println("                    <div class=\"img\">");
+if (LED_26_State == "off"){
+  client.println("                  <div class=\"img\">");
+}else{
+  client.println("                  <div class=\"img on\">");
+}
+
 client.println("                        <img class=\"led\" src=\"https://res.cloudinary.com/vantiennn/image/upload/v1653213936/led_vujitx.png\" alt=\"\" />");
 client.println("                    </div>");
-client.println("                    <h3 class=\"status-led\">OFF</h3>");
+
+if (LED_26_State == "off"){
+  client.println("                    <h3 class=\"status-led\">OFF</h3>");
+}else{
+  client.println("                    <h3 class=\"status-led\">ON</h3>");
+}
+
 client.println("                    <h3 class=\"dics\">LED 1</h3>");
 client.println("                </div>");
 client.println("                <div class=\"body-setting\">");
