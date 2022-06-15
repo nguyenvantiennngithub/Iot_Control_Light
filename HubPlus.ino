@@ -13,12 +13,11 @@ String LED_26_State = "off";
 String header;
 WiFiServer server(80);
 
-
-
-unsigned long times=millis();
+// Current time
 unsigned long currentTime = millis();
-
+// Previous time
 unsigned long previousTime = 0; 
+// Define timeout time in milliseconds (example: 2000ms = 2s)
 const long timeoutTime = 2000;
 void setup() {
   Serial.begin(9600);
@@ -41,8 +40,6 @@ void setup() {
 }
 
 void loop() {
-  
-  
   WiFiClient client = server.available();   
   //Serial.println("New Client.");         
   String currentLine = "";              
