@@ -5,7 +5,7 @@
 }
 
 html {
-    font-family: cursive;
+    font-family: cursive !important;
 }
 
 body {
@@ -61,9 +61,9 @@ body {
     margin-top: 25px;
     margin-left: 5px;
     font-size: 18px;
-    background-color: #37343a;
+    background-color: #37343a !important;
     border: none;
-    color: #cbcbcf;
+    color: #cbcbcf !important;
     padding: 10px;
     border-radius: 10px;
     cursor: pointer;

@@ -57,6 +57,7 @@ BLYNK_CONNECTED() {
   Blynk.syncVirtual(V1,V3);
 }
 BLYNK_WRITE(V1){
+  Serial.println("v1 connect");
   int p = param.asInt();
   if (p == 0){
     LED_26_State = "off";
@@ -66,6 +67,7 @@ BLYNK_WRITE(V1){
   digitalWrite(PIN_LED_26, p); 
 }
 BLYNK_WRITE(V3){
+  Serial.println("v3 connect");
   int p = param.asInt();
   if (p == 0){
     LED_27_State = "off";

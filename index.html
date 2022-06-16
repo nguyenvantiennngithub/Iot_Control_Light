@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+        <title>Đồ Án Cơ Sở</title>
+        <link rel="shortcut icon" href="led.png" type="image/x-icon" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"
+        ></script>
+    </head>
+    <body>
+        <div id="main">
+            <!-- đèn trạng thái đang tắt  -->
+            <div class="content-led" id="led1">
+                <div class="img-led">
+                    <div class="img">
+                        <img class="led" src="led.png" alt="" />
+                    </div>
+                    <h3 class="status-led">OFF</h3>
+                    <h3 class="dics">LED 1</h3>
+                </div>
+                <div class="body-setting">
+                    <div class="btn-setting-led">
+                        <h3 class="btn-title-setting">Cài đặt hẹn giờ:</h3>
+                        <button
+                            class="btn"
+                            data-bs-target="#led1TimeOnModel"
+                            data-bs-toggle="modal"
+                        >
+                            Hẹn giờ bật
+                        </button>
+                        <button
+                            class="btn"
+                            data-bs-target="#led1TimeOffModel"
+                            data-bs-toggle="modal"
+                        >
+                            Hẹn giờ tắt
+                        </button>
+                    </div>
+
+                    <div class="body-setting-timer" id="led1Counter"></div>
+                </div>
+            </div>
+
+            <!-- đèn trạng thái đang tắt  -->
+            <div class="content-led" id="led2">
+                <div class="img-led">
+                    <div class="img">
+                        <img class="led" src="led.png" alt="" />
+                    </div>
+                    <h3 class="status-led">OFF</h3>
+                    <h3 class="dics">LED 2</h3>
+                </div>
+                <div class="body-setting">
+                    <div class="btn-setting-led">
+                        <h3 class="btn-title-setting">Cài đặt hẹn giờ:</h3>
+                        <button
+                            class="btn"
+                            data-bs-target="#led2TimeOnModel"
+                            data-bs-toggle="modal"
+                        >
+                            Hẹn giờ bật
+                        </button>
+                        <button
+                            class="btn"
+                            data-bs-target="#led2TimeOffModel"
+                            data-bs-toggle="modal"
+                        >
+                            Hẹn giờ tắt
+                        </button>
+                    </div>
+
+                    <div class="body-setting-timer" id="led2Counter"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Off 1-->
+        <div
+            class="modal fade"
+            id="led1TimeOffModel"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabindex="-1"
+            aria-labelledby="led1TimeOffModelLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hẹn giờ tắt đèn 1</h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <label>Nhập thời gian tắt: </label>
+                        <input
+                            type="datetime-local"
+                            class="ledDateOff"
+                            id="led1DateOff"
+                        />
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary ledBtnCloseOff"
+                            data-bs-dismiss="modal"
+                            id="led1BtnCloseOff"
+                        >
+                            Close
+                        </button>
+                        <button
+                            type="button"
+                            id="led1BtnSubmitOff"
+                            class="btn btn-primary ledBtnSubmitOff"
+                        >
+                            Save changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal On 1-->
+        <div
+            class="modal fade"
+            id="led1TimeOnModel"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabindex="-1"
+            aria-labelledby="led1TimeOnModelLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hẹn giờ bật đèn 1</h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <label>Nhập thời gian tắt: </label>
+                        <input
+                            type="datetime-local"
+                            id="led1DateOn"
+                            class="ledDateOn"
+                        />
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary ledBtnCloseOn"
+                            data-bs-dismiss="modal"
+                            id="led1BtnCloseOn"
+                        >
+                            Close
+                        </button>
+                        <button
+                            type="button"
+                            id="led1BtnSubmitOn"
+                            class="btn btn-primary ledBtnSubmitOn"
+                        >
+                            Save changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Off 2-->
+        <div
+            class="modal fade"
+            id="led2TimeOffModel"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabindex="-2"
+            aria-labelledby="led2TimeOffModelLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hẹn giờ tắt đèn 2</h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <label>Nhập thời gian tắt: </label>
+                        <input
+                            type="datetime-local"
+                            class="ledDateOff"
+                            id="led2DateOff"
+                        />
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary ledBtnCloseOff"
+                            data-bs-dismiss="modal"
+                            id="led2BtnCloseOff"
+                        >
+                            Close
+                        </button>
+                        <button
+                            type="button"
+                            id="led2BtnSubmitOff"
+                            class="btn btn-primary ledBtnSubmitOff"
+                        >
+                            Save changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal On 2-->
+        <div
+            class="modal fade"
+            id="led2TimeOnModel"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabindex="-2"
+            aria-labelledby="led2TimeOnModelLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hẹn giờ bật đèn 2</h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <label>Nhập thời gian tắt: </label>
+                        <input
+                            type="datetime-local"
+                            id="led2DateOn"
+                            class="ledDateOn"
+                        />
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary ledBtnCloseOn"
+                            data-bs-dismiss="modal"
+                            id="led2BtnCloseOn"
+                        >
+                            Close
+                        </button>
+                        <button
+                            type="button"
+                            id="led2BtnSubmitOn"
+                            class="btn btn-primary ledBtnSubmitOn"
+                        >
+                            Save changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="script.js"></script>
+</html>

@@ -1,4 +1,19 @@
 window.addEventListener("DOMContentLoaded", () => {
+    const led1Port = 26;
+    const led2Port = 27;
+    function ajaxTurnOn(port) {
+        $.ajax({
+            url: `/${port}/on`,
+            method: "GET",
+        });
+    }
+    function ajaxTurnOff(port) {
+        $.ajax({
+            url: `/${port}/off`,
+            method: "GET",
+        });
+    }
+
     function convertTimestampToCustom(time) {
         const result = {
             days: 0,
@@ -62,33 +77,42 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function handleToggleLed(parent) {
+    function handleToggleLed(parent, port) {
         const toggleEle = document.querySelector(parent);
         const imageEle = toggleEle.querySelector(".img");
         const statusEle = toggleEle.querySelector(".status-led");
         console.log({ toggle1Ele, imageEle, statusEle });
         imageEle.classList.toggle("on");
-        statusEle.textContent = statusEle.textContent === "ON" ? "OFF" : "ON";
+        console.log(statusEle.textContent);
+        if (statusEle.textContent === "ON") {
+            statusEle.textContent = "OFF";
+            ajaxTurnOff(port);
+        } else {
+            statusEle.textContent = "ON";
+            ajaxTurnOn(port);
+        }
     }
 
-    function handleTurnOffLed(parent) {
+    function handleTurnOffLed(parent, port) {
         const toggleEle = document.querySelector(parent);
         const imageEle = toggleEle.querySelector(".img");
         const statusEle = toggleEle.querySelector(".status-led");
         console.log({ toggle1Ele, imageEle, statusEle });
         imageEle.classList.remove("on");
         statusEle.textContent = "OFF";
+        ajaxTurnOff(port);
     }
-    function handleTurnOnLed(parent) {
+    function handleTurnOnLed(parent, port) {
         const toggleEle = document.querySelector(parent);
         const imageEle = toggleEle.querySelector(".img");
         const statusEle = toggleEle.querySelector(".status-led");
         console.log({ toggle1Ele, imageEle, statusEle });
         imageEle.classList.add("on");
         statusEle.textContent = "ON";
+        ajaxTurnOn(port);
     }
 
-    function handleModelOffClick(parent, modelParent, counterParent) {
+    function handleModelOffClick(parent, modelParent, counterParent, port) {
         const modelOff = document.querySelector(modelParent);
         const dateOff = modelOff.querySelector(".ledDateOff");
         const btnCloseOff = modelOff.querySelector(".ledBtnCloseOff");
@@ -110,7 +134,7 @@ window.addEventListener("DOMContentLoaded", () => {
         var tempTime = setTimeout(function () {
             btnCloseOff.click();
             var timeout = setTimeout(function (e) {
-                handleTurnOffLed(parent);
+                handleTurnOffLed(parent, port);
                 document.querySelector("#timer-" + timeout).remove();
                 clearInterval(timeInterval);
             }, timestamp);
@@ -136,7 +160,7 @@ window.addEventListener("DOMContentLoaded", () => {
             handleCancelAllTimmer();
         }, timestamp % 1000);
     }
-    function handleModelOnClick(parent, modelParent, counterParent) {
+    function handleModelOnClick(parent, modelParent, counterParent, port) {
         const modelOn = document.querySelector(modelParent);
         const dateOn = modelOn.querySelector(".ledDateOn");
         const btnCloseOn = modelOn.querySelector(".ledBtnCloseOn");
@@ -158,7 +182,7 @@ window.addEventListener("DOMContentLoaded", () => {
         var tempTime = setTimeout(function () {
             btnCloseOn.click();
             var timeout = setTimeout(function (e) {
-                handleTurnOnLed(parent);
+                handleTurnOnLed(parent, port);
                 document.querySelector("#timer-" + timeout).remove();
                 clearInterval(timeInterval);
             }, timestamp);
@@ -190,13 +214,23 @@ window.addEventListener("DOMContentLoaded", () => {
     const btnSubmit1Off = document.querySelector("#led1BtnSubmitOff");
     const btnSubmit1On = document.querySelector("#led1BtnSubmitOn");
     toggle1Ele.onclick = function () {
-        handleToggleLed("#led1");
+        handleToggleLed("#led1", led1Port);
     };
     btnSubmit1Off.onclick = function () {
-        handleModelOffClick("#led1", "#led1TimeOffModel", "#led1Counter");
+        handleModelOffClick(
+            "#led1",
+            "#led1TimeOffModel",
+            "#led1Counter",
+            led1Port
+        );
     };
     btnSubmit1On.onclick = function () {
-        handleModelOnClick("#led1", "#led1TimeOnModel", "#led1Counter");
+        handleModelOnClick(
+            "#led1",
+            "#led1TimeOnModel",
+            "#led1Counter",
+            led1Port
+        );
     };
 
     const light2Ele = document.querySelector("#led2");
@@ -204,12 +238,22 @@ window.addEventListener("DOMContentLoaded", () => {
     const btnSubmit2Off = document.querySelector("#led2BtnSubmitOff");
     const btnSubmit2On = document.querySelector("#led2BtnSubmitOn");
     toggle2Ele.onclick = function () {
-        handleToggleLed("#led2");
+        handleToggleLed("#led2", led2Port);
     };
     btnSubmit2Off.onclick = function () {
-        handleModelOffClick("#led2", "#led2TimeOffModel", "#led2Counter");
+        handleModelOffClick(
+            "#led2",
+            "#led2TimeOffModel",
+            "#led2Counter",
+            led2Port
+        );
     };
     btnSubmit2On.onclick = function () {
-        handleModelOnClick("#led2", "#led2TimeOnModel", "#led2Counter");
+        handleModelOnClick(
+            "#led2",
+            "#led2TimeOnModel",
+            "#led2Counter",
+            led2Port
+        );
     };
 });
