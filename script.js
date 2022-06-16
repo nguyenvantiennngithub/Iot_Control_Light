@@ -125,6 +125,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
 
         const timer = new Date(dateOff.value);
+        const expireTime = new Date(dateOff.value);
         const timestamp = timer - now;
         if (timestamp <= 0) {
             alert("Bạn cần đặt thời gian lớn hơn hiện tại");
@@ -140,7 +141,8 @@ window.addEventListener("DOMContentLoaded", () => {
             }, timestamp);
 
             const timeInterval = setInterval(function () {
-                newTimeStamp -= 1000;
+                var currentDate = new Date();
+                newTimeStamp = expireTime - currentDate;
                 const timerContainerEle = document.querySelector(
                     "#timer-" + timeout
                 );

@@ -1,5 +1,4 @@
 
-
 const char PAGE_MAIN[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
 <html lang="en">
@@ -303,7 +302,48 @@ const char PAGE_MAIN[] PROGMEM = R"rawliteral(
         </div>
     </body>
     <script>
+
+        
+        
+
+    
         window.addEventListener("DOMContentLoaded", () => {
+          var gateway = `ws://${window.location.hostname}/ws`;
+          var websocket;
+          window.addEventListener('load', onLoad);
+          function initWebSocket() {
+            console.log('Trying to open a WebSocket connection...');
+            websocket = new WebSocket(gateway);
+            websocket.onopen    = onOpen;
+            websocket.onclose   = onClose;
+            websocket.onmessage = onMessage; // <-- add this line
+          }
+          function onOpen(event) {
+            console.log('Connection opened');
+          }
+          function onClose(event) {
+            console.log('Connection closed');
+            setTimeout(initWebSocket, 2000);
+          }
+          function onMessage(event) {
+            if (event.data == "/26/on"){ 
+              handleTurnOnLed("#led1", 26);
+            }
+            if (event.data == "/26/off"){ 
+              handleTurnOffLed("#led1", 26);
+            }
+            if (event.data == "/27/on"){ 
+              handleTurnOnLed("#led2", 27);
+            }
+            if (event.data == "/27/off"){ 
+              handleTurnOffLed("#led2", 27);
+            }
+            console.log("on Message", event);
+            
+          }
+          function onLoad(event) {
+            initWebSocket();
+          }
             const led1Port = 26;
             const led2Port = 27;
             function ajaxTurnOn(port) {
@@ -326,11 +366,10 @@ const char PAGE_MAIN[] PROGMEM = R"rawliteral(
                     minutes: 0,
                     seconds: 0,
                 };
-
                 result.days = Math.floor(time / (1000 * 60 * 60 * 24));
-                result.hours = Math.floor((time / (1000 * 60 * 60)) % 24);
-                result.minutes = Math.floor((time / (1000 * 60)) % 60);
-                result.seconds = Math.floor((time / 1000) % 60);
+                result.hours = Math.floor(time / (1000 * 60 * 60) %% 24);
+                result.minutes = Math.floor((time / (1000 * 60)) %% 60);
+                result.seconds = Math.floor((time / 1000) %% 60);
                 var string = "";
                 if (result.days > 0) string += result.days + "d ";
                 if (result.hours > 0) string += result.hours + "h ";
@@ -342,17 +381,17 @@ const char PAGE_MAIN[] PROGMEM = R"rawliteral(
             function itemCounter(id, type, timestamp, timeOut, timeInterval) {
                 console.log(timeOut, timeInterval);
                 return `
-            <div class="content-setting" id="${id}" data-id="${id}" data-timeout="${timeOut}" data-timeinterval="${timeInterval}">
-                <h3 class="title-setting">${type}:</h3>
-                <p class="countdown timmer">${convertTimestampToCustom(
-                    timestamp
-                )}</p>
-                <span class="cancel-timmer" style="    display: block;
-                margin: auto 0;
-                margin-left: auto;
-                margin-right: 8px;
-                cursor: pointer;">X</span>
-            </div>`;
+                    <div class="content-setting" id="${id}" data-id="${id}" data-timeout="${timeOut}" data-timeinterval="${timeInterval}">
+                        <h3 class="title-setting">${type}:</h3>
+                        <p class="countdown timmer">${convertTimestampToCustom(
+                            timestamp
+                        )}</p>
+                        <span class="cancel-timmer" style="    display: block;
+                        margin: auto 0;
+                        margin-left: auto;
+                        margin-right: 8px;
+                        cursor: pointer;">X</span>
+                    </div>`;
             }
 
             function handleCancelTimmer(
@@ -393,14 +432,17 @@ const char PAGE_MAIN[] PROGMEM = R"rawliteral(
                 const imageEle = toggleEle.querySelector(".img");
                 const statusEle = toggleEle.querySelector(".status-led");
                 console.log({ toggle1Ele, imageEle, statusEle });
-                imageEle.classList.toggle("on");
-                console.log(statusEle.textContent);
+//              imageEle.classList.toggle("on");
+//              console.log(statusEle.textContent);
                 if (statusEle.textContent === "ON") {
-                    statusEle.textContent = "OFF";
-                    ajaxTurnOff(port);
+//                    statusEle.textContent = "OFF";
+                    //ajaxTurnOff(port);
+                    websocket.send(`/${port}/off`);
                 } else {
-                    statusEle.textContent = "ON";
-                    ajaxTurnOn(port);
+//                    statusEle.textContent = "ON";
+                    //ajaxTurnOn(port);
+                    console.log(`/${port}/on`);
+                    websocket.send(`/${port}/on`);
                 }
             }
 
@@ -411,16 +453,17 @@ const char PAGE_MAIN[] PROGMEM = R"rawliteral(
                 console.log({ toggle1Ele, imageEle, statusEle });
                 imageEle.classList.remove("on");
                 statusEle.textContent = "OFF";
-                ajaxTurnOff(port);
+               
             }
             function handleTurnOnLed(parent, port) {
+                console.log(parent)
                 const toggleEle = document.querySelector(parent);
                 const imageEle = toggleEle.querySelector(".img");
                 const statusEle = toggleEle.querySelector(".status-led");
                 console.log({ toggle1Ele, imageEle, statusEle });
                 imageEle.classList.add("on");
                 statusEle.textContent = "ON";
-                ajaxTurnOn(port);
+                //ajaxTurnOn(port);
             }
 
             function handleModelOffClick(
@@ -442,6 +485,7 @@ const char PAGE_MAIN[] PROGMEM = R"rawliteral(
 
                 const timer = new Date(dateOff.value);
                 const timestamp = timer - now;
+                const expireTime = new Date(dateOff.value);
                 if (timestamp <= 0) {
                     alert("Bạn cần đặt thời gian lớn hơn hiện tại");
                     return;
@@ -450,13 +494,15 @@ const char PAGE_MAIN[] PROGMEM = R"rawliteral(
                 var tempTime = setTimeout(function () {
                     btnCloseOff.click();
                     var timeout = setTimeout(function (e) {
-                        handleTurnOffLed(parent, port);
+                        //handleTurnOffLed(parent, port);
+                        websocket.send(`/${port}/off`);
                         document.querySelector("#timer-" + timeout).remove();
                         clearInterval(timeInterval);
                     }, timestamp);
 
                     const timeInterval = setInterval(function () {
-                        newTimeStamp -= 1000;
+                        var currentDate = new Date();
+                        newTimeStamp = expireTime - currentDate;
                         const timerContainerEle = document.querySelector(
                             "#timer-" + timeout
                         );
@@ -474,7 +520,7 @@ const char PAGE_MAIN[] PROGMEM = R"rawliteral(
                             timeInterval
                         );
                     handleCancelAllTimmer();
-                }, timestamp % 1000);
+                }, timestamp %% 1000);
             }
             function handleModelOnClick(
                 parent,
@@ -495,6 +541,7 @@ const char PAGE_MAIN[] PROGMEM = R"rawliteral(
 
                 const timer = new Date(dateOn.value);
                 const timestamp = timer - now;
+                const expireTime = new Date(dateOn.value);
                 if (timestamp <= 0) {
                     alert("Bạn cần đặt thời gian lớn hơn hiện tại");
                     return;
@@ -503,15 +550,17 @@ const char PAGE_MAIN[] PROGMEM = R"rawliteral(
                 var tempTime = setTimeout(function () {
                     btnCloseOn.click();
                     var timeout = setTimeout(function (e) {
-                        handleTurnOnLed(parent, port);
+                        //handleTurnOnLed(parent, port);
+                        websocket.send(`/${port}/on`);
                         document.querySelector("#timer-" + timeout).remove();
                         clearInterval(timeInterval);
                     }, timestamp);
 
-                    var newTimeStamp = timestamp;
+                    var newTimeStamp;
 
                     const timeInterval = setInterval(function () {
-                        newTimeStamp -= 1000;
+                        var currentDate = new Date();
+                        newTimeStamp = expireTime - currentDate;
                         const timerContainerEle = document.querySelector(
                             "#timer-" + timeout
                         );
@@ -528,13 +577,14 @@ const char PAGE_MAIN[] PROGMEM = R"rawliteral(
                             timeInterval
                         );
                     handleCancelAllTimmer();
-                }, timestamp % 1000);
+                }, timestamp %% 1000);
             }
             const light1Ele = document.querySelector("#led1");
             const toggle1Ele = light1Ele.querySelector(".img-led");
             const btnSubmit1Off = document.querySelector("#led1BtnSubmitOff");
             const btnSubmit1On = document.querySelector("#led1BtnSubmitOn");
             toggle1Ele.onclick = function () {
+                console.log("fuck");
                 handleToggleLed("#led1", led1Port);
             };
             btnSubmit1Off.onclick = function () {
@@ -670,7 +720,7 @@ const char PAGE_MAIN[] PROGMEM = R"rawliteral(
         }
 
         .body-setting-timer {
-            width: 100%;
+            width: 100%%;
             height: 100px;
             background-color: #ccc;
             margin-left: 7px;
@@ -689,7 +739,7 @@ const char PAGE_MAIN[] PROGMEM = R"rawliteral(
             display: flex;
             /* line-height: 30px; */
             height: 30px;
-            width: 100%;
+            width: 100%%;
         }
 
         .title-setting {
