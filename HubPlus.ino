@@ -1,12 +1,22 @@
-#include <WiFi.h> 
+#include <WiFi.h>
 #include <WebServer.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include "Web.h"
 //#define LOCAL_SSID "Sau Banh "
 //#define LOCAL_PASS "0989759499"
-#define LOCAL_SSID "Van Tiennn"
-#define LOCAL_PASS "nguyenvantienn"
+
+//#define LOCAL_SSID "Van Tiennn"
+//#define LOCAL_PASS "nguyenvantienn"
+
+#define LOCAL_SSID "saubanh"
+#define LOCAL_PASS "tu1den20"
+
+//char ssid[] = "Van Tiennn";
+//char pass[] = "nguyenvantienn";
+
+char ssid[] = "saubanh";
+char pass[] = "tu1den20";
 
 #define BLYNK_TEMPLATE_ID           "TMPL-Fb8IWXf"
 #define BLYNK_DEVICE_NAME           "IOT DACS"
@@ -15,8 +25,6 @@
 #include <WiFiClient.h>
 #include <BlynkSimpleEsp32.h>
 char auth[] = BLYNK_AUTH_TOKEN;
-char ssid[] = "Van Tiennn";
-char pass[] = "nguyenvantienn";
 WidgetLED led1_connect(V0);
 WidgetLED led2_connect(V2);
 unsigned long times=millis();

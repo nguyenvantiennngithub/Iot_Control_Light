@@ -27,7 +27,6 @@ const char PAGE_MAIN[] PROGMEM = R"rawliteral(
     </head>
     <body>
         <div id="main">
-            <h1>hihijhihisndas</h1>
             <!-- đèn trạng thái đang tắt  -->
             <div class="content-led" id="led1">
                 <div class="img-led">
